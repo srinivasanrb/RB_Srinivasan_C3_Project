@@ -2,9 +2,9 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import java.lang.IllegalArgumentException;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,6 +63,31 @@ class RestaurantTest {
     public void removing_item_that_does_not_exist_should_throw_exception() {
         assertThrows(itemNotFoundException.class,
                 ()->restaurant.removeFromMenu("French fries"));
+    }
+    @Test
+    public void calculated_order_value_should_be_equal_to_price_of_items_selected() throws itemNotFoundException{
+        ArrayList<String> selectedItems = new ArrayList<String>();
+        selectedItems.add("Sweet corn soup");
+        selectedItems.add("Vegetable lasagne");
+
+        int expectedTotalCost = 119 + 269;
+        assertEquals(expectedTotalCost, restaurant.calculateOrderPrice(selectedItems));
+    }
+
+    @Test
+    public void calculate_order_price_should_throw_expection_if_any_menu_item_not_found_in_the_selected_list() {
+        ArrayList<String> selectedItems = new ArrayList<String>();
+        selectedItems.add( "Sweet corn soup");
+        selectedItems.add("Vegetable Rice");
+
+        assertThrows(itemNotFoundException.class,()->restaurant.calculateOrderPrice(selectedItems));
+    }
+
+    @Test
+    public void calculate_order_value_should_return_zero_selected_items_list_is_empty() throws itemNotFoundException{
+        ArrayList<String> selectedItems = new ArrayList<String>();
+        int expectedTotalCost = 0;
+        assertEquals(expectedTotalCost, restaurant.calculateOrderPrice(selectedItems));
     }
     //<<<<<<<<<<<<<<<<<<<<<<<MENU>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 }
